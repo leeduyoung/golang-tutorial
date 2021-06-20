@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -24,7 +25,7 @@ func main() {
 	}
 	fmt.Println(rows, err)
 
-	result, err := db.Exec("INSERT INTO test (id, name) VALUES (4, 'Alex4')")
+	result, err := db.Exec("INSERT INTO test (id, name) VALUES (5, 'Alex5')")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -32,7 +33,14 @@ func main() {
 }
 
 func createAndOpen(dbName string) *sql.DB {
-	db, err := sql.Open("mysql", "root:2831647d@tcp(127.0.0.1:3306)/")
+	host := os.Getenv("RDS_HOSTNAME")
+	userName := os.Getenv("RDS_USERNAME")
+	password := os.Getenv("RDS_PASSWORD")
+	port := os.Getenv("RDS_PORT")
+
+	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/", userName, password, host, port)
+
+	db, err := sql.Open("mysql", dataSourceName)
 	if err != nil {
 		panic(err)
 	}
@@ -43,7 +51,7 @@ func createAndOpen(dbName string) *sql.DB {
 	}
 	db.Close()
 
-	db, err = sql.Open("mysql",  "root:2831647d@tcp(127.0.0.1:3306)/" + dbName)
+	db, err = sql.Open("mysql",  dataSourceName + dbName)
 	if err != nil {
 		panic(err)
 	}
