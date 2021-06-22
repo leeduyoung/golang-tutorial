@@ -13,12 +13,12 @@ func main() {
 
 	db := createAndOpen("testdb")
 	defer db.Close()
-	
+
 	err := db.Ping()
 	if err != nil {
-			panic(err.Error()) // proper error handling instead of panic in your app
-	}	
-	
+		panic(err.Error()) // proper error handling instead of panic in your app
+	}
+
 	rows, err := db.Query("SELECT id, name FROM test")
 	if err != nil {
 		panic(err.Error())
@@ -51,7 +51,7 @@ func createAndOpen(dbName string) *sql.DB {
 	}
 	db.Close()
 
-	db, err = sql.Open("mysql",  dataSourceName + dbName)
+	db, err = sql.Open("mysql", dataSourceName+dbName)
 	if err != nil {
 		panic(err)
 	}
