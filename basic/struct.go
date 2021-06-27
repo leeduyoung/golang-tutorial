@@ -2,7 +2,7 @@ package main
 
 type Person struct {
 	name string
-	age int
+	age  int
 }
 
 // 구조체 생성자 패턴
