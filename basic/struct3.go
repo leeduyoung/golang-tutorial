@@ -13,7 +13,7 @@ type Person2 struct {
 }
 
 func (p *Person2) greeting() {
-	fmt.Println("Hello world!")
+	fmt.Println("Hello Person!")
 }
 
 type Student struct {

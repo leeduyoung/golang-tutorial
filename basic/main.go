@@ -39,4 +39,21 @@ func main() {
 	// 4. 구조체 임베딩을 사용하여 상속하기
 	var s Student
 	s.p.greeting()
+
+	// 5. 인터페이스 사용하기
+	var i MyInt = 1
+	r := Rectangle2{10, 10}
+
+	p1 := Printer(i) // var p Printer와 같이 언터페이스를 선언하고 p = i 대입하는것과 동일하다.
+	p1.Print()
+
+	p2 := Printer(r)
+	p2.Print()
+
+	// 6. 덕타이핑
+	var donald Duck
+	var kaye Person3
+
+	inTheForest(donald)
+	inTheForest(kaye)
 }
