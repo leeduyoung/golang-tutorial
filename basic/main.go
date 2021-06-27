@@ -35,4 +35,8 @@ func main() {
 
 	// 3. 포인터 변수 사용하기
 	PointerTest()
+
+	// 4. 구조체 임베딩을 사용하여 상속하기
+	var s Student
+	s.p.greeting()
 }
