@@ -3,6 +3,9 @@ package main
 import "fmt"
 
 func main() {
+	// 0. recover
+	recoverTest()
+
 	// 1. 생성자 패턴 사용하기
 	fmt.Println("main called")
 
