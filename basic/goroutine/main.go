@@ -26,6 +26,12 @@ func main() {
 	// 		fmt.Println("say hi2", n)
 	// 	}(i)
 	// }
+	fmt.Println("=====Goroutine Channel=====")
+
+	c := make(chan int)
+	go sum(1, 2, c) // 채널을 매개변수로 받는 함수는 반드시 go 키워드를 사용하여 고루틴으로 실행해야한다.
+	n := <-c        // 채널에서 값을 가져온다.
+	fmt.Println("chan c: ", n)
 
 	fmt.Scanln()
 }
