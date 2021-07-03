@@ -28,9 +28,9 @@ func main() {
 	// }
 	fmt.Println("=====Goroutine Channel=====")
 
-	c := make(chan int)
-	go sum(1, 2, c) // 채널을 매개변수로 받는 함수는 반드시 go 키워드를 사용하여 고루틴으로 실행해야한다.
-	n := <-c        // 채널에서 값을 가져온다.
+	c := make(chan int) // 채널을 사용하기 전에는 반드시 make 함수로 공간을 할당해야한다. 이렇게 생성하면 동기채널(synchronous channel)이 생성된다.
+	go sum(1, 2, c)     // 채널을 매개변수로 받는 함수는 반드시 go 키워드를 사용하여 고루틴으로 실행해야한다.
+	n := <-c            // 채널에서 값을 가져온다.
 	fmt.Println("chan c: ", n)
 
 	fmt.Scanln()
