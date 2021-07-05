@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"runtime"
-	"sync"
-	"time"
 )
 
 func main() {
@@ -14,29 +12,9 @@ func main() {
 
 	runtime.GOMAXPROCS(runtime.NumCPU()) // 모든 CPU 사용
 
-	var data = []int{}
-	var mutex = new(sync.Mutex)
+	// mutexTest()
 
-	go func() {
-		for i := 0; i < 1000; i++ {
-			mutex.Lock()
-			data = append(data, 1)
-			mutex.Unlock()
-
-			runtime.Gosched()
-		}
-	}()
-
-	go func() {
-		for i := 0; i < 1000; i++ {
-			mutex.Lock()
-			data = append(data, 1)
-			mutex.Unlock()
-
-			runtime.Gosched()
-		}
-	}()
-
-	time.Sleep(2 * time.Second)
-	fmt.Println(len(data))
+	// RWMutex test
+	// rwmutexTestX()
+	rwmutexTestO()
 }
