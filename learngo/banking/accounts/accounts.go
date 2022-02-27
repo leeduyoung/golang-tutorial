@@ -1,6 +1,9 @@
 package accounts
 
-import "errors"
+import (
+	"encoding/json"
+	"errors"
+)
 
 // Account struct
 type Account struct {
@@ -39,4 +42,28 @@ func (a *Account) Withdraw(amount int) error {
 	return nil
 }
 
-// TODO: 2.3 강좌
+// ChangeOwner of the account
+func (a *Account) ChangeOwner(newOwner string) {
+	a.owner = newOwner
+}
+
+// Owner of the account
+func (a *Account) Owner() string {
+	return a.owner
+}
+
+func (a *Account) String() string {
+	jsonData, err := json.Marshal(struct {
+		Owner   string
+		Balance int
+	}{
+		Owner:   a.owner,
+		Balance: a.balance,
+	})
+
+	if err != nil {
+		return err.Error()
+	}
+
+	return string(jsonData)
+}
