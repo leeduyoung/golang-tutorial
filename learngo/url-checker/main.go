@@ -8,8 +8,13 @@ import (
 
 var ErrRequestFailed = errors.New("request failed")
 
+type response struct {
+	url    string
+	status string
+}
+
 func main() {
-	var results = make(map[string]string)
+	results := make(map[string]string)
 
 	urls := []string{
 		"https://www.naver.com/",
@@ -22,14 +27,15 @@ func main() {
 		"https://www.goodchoice.kr/",
 	}
 
-	for _, url := range urls {
-		result := "OK"
-		err := hitURL(url)
+	urlCheckChannel := make(chan response)
 
-		if err != nil {
-			result = "FAILED"
-		}
-		results[url] = result
+	for _, url := range urls {
+		go hitURL(url, urlCheckChannel)
+	}
+
+	for i := 0; i < len(urls); i++ {
+		resp := <-urlCheckChannel
+		results[resp.url] = resp.status
 	}
 
 	for url, result := range results {
@@ -37,14 +43,18 @@ func main() {
 	}
 }
 
-func hitURL(url string) error {
+func hitURL(url string, c chan<- response) { // <- 를 매개변수 타입에 입력하면 채널에서 데이터를 보낼수만 있도록 고정할 수 있다.
 	fmt.Println("Checking: ", url)
 
 	resp, err := http.Get(url)
+	status := "OK"
 
 	if err != nil || resp.StatusCode >= 400 {
-		return ErrRequestFailed
+		status = "FAILED"
 	}
 
-	return nil
+	c <- response{
+		url:    url,
+		status: status,
+	}
 }

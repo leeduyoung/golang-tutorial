@@ -24,7 +24,7 @@ func main() {
 		go count(user, countChan)
 	}
 
-	for i, _ := range users {
+	for i := range users {
 		result := <-countChan
 		fmt.Println(i, result)
 	}
