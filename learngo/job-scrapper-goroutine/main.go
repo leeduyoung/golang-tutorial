@@ -26,14 +26,17 @@ type extractedJob struct {
 func main() {
 	startTime := time.Now()
 
+	var jobChannel = make(chan []extractedJob)
 	var jobs []extractedJob
 	totalCount := getTotalPageCount()
 	fmt.Println(totalCount)
 
 	for i := 0; i < totalCount; i++ {
-		// TODO: 고루틴 처리 가능
-		extractedJobs := getPage(i)
-		jobs = append(jobs, extractedJobs...)
+		go getPage(i, jobChannel)
+	}
+
+	for i := 0; i < totalCount; i++ {
+		jobs = append(jobs, <-jobChannel...)
 	}
 
 	writeJobs(jobs)
@@ -61,7 +64,8 @@ func writeJobs(jobs []extractedJob) {
 	}
 }
 
-func getPage(page int) []extractedJob {
+func getPage(page int, c chan []extractedJob) {
+	var jobChannel = make(chan extractedJob)
 	var jobs []extractedJob
 	pageURL := baseURL + "&start=" + strconv.Itoa(page*50)
 	fmt.Println(pageURL)
@@ -74,22 +78,26 @@ func getPage(page int) []extractedJob {
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	checkErr(err)
 
-	doc.Find(".mosaic-provider-jobcards>a").Each(func(i int, s *goquery.Selection) {
-		// TODO: 고루틴 처리 가능
-		job := extractJob(s)
-		jobs = append(jobs, job)
+	searchCards := doc.Find(".mosaic-provider-jobcards>a")
+	searchCards.Each(func(i int, s *goquery.Selection) {
+		go extractJob(s, jobChannel)
 	})
 
-	return jobs
+	for i := 0; i < searchCards.Length(); i++ {
+		jobs = append(jobs, <-jobChannel)
+	}
+
+	c <- jobs
 }
 
-func extractJob(s *goquery.Selection) extractedJob {
+func extractJob(s *goquery.Selection, c chan<- extractedJob) {
 	id, _ := s.Attr("data-jk")
 	title := cleanString(s.Find(".jobTitle>span").Text())
 	companyName := cleanString(s.Find(".companyName").Text())
 	companyLocation := cleanString(s.Find(".companyLocation").Text())
 	summary := cleanString(s.Find(".job-snippet").Text())
-	return extractedJob{
+
+	c <- extractedJob{
 		id:              id,
 		title:           title,
 		companyName:     companyName,
