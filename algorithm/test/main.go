@@ -1,58 +1,62 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 func main() {
-	// res := solution([]int{2, 1, 3, 2}, 2)
-	res := solution([]int{1, 1, 9, 1, 1, 1}, 0)
+	res := solution("one4seveneight")
 	fmt.Println(res)
 }
 
-func solution(priorities []int, location int) int {
+func solution(s string) int {
 
 	/*
-		1. location에 해당하는 숫자를 찾는다.
-		2. priorities 큐에서 location에 해당하는 숫자가 없을때까지 반복한다.
-		3. 첫번째 숫자보다 큰 숫자가 큐에 존재하면 큐의 마지막에 넣는다.
-		4. 없다면 큐에서 제거한다.
-		5. 큐에서 제거할때 retCount 변수값(초기값 0)을 1 증가시킨다.
-		6. 큐에서 제거할때 해당 값이 내가 찾던 숫자라면 반복을 제거한다.
-		7. retCount 값을 리턴한다.
+	   0. 영단어가 key, 숫자가 value인 map을 생성한다.
+	   1. 문자열을 순회하면서
+	   2. 숫자일 경우 pass
+	   3. 문자일 경우 문자열 변수에 더한다. 그리고 해당 변수가 map에 존재한다면 숫자로 치환하고 문자열 변수 초기화
+	   4. 존재하지 않는다면 다음으로 pass
+
+	   1. dictMap 생성
+	   2. 문자열 변수 = strValue 생성
+	   3. 리턴할 변수 ret
 	*/
+	var ret = ""
+	var dicMap = map[string]string{
+		"zero":  "0",
+		"one":   "1",
+		"two":   "2",
+		"three": "3",
+		"four":  "4",
+		"five":  "5",
+		"six":   "6",
+		"seven": "7",
+		"eight": "8",
+		"nine":  "9",
+	}
+	var strValue = ""
 
-	var targetLocation = location
-	var retCount = 0
+	for _, v := range s {
+		strV := string(v)
+		_, err := strconv.Atoi(strV)
 
-	for len(priorities) > 0 {
-		first := priorities[0]
-		exists := false
+		if err != nil {
+			strValue += strV
 
-		for i := 1; i < len(priorities); i++ {
-			if first < priorities[i] {
-				priorities = append(priorities[1:], first)
-				exists = true
-
-				if targetLocation == 0 {
-					targetLocation = len(priorities) - 1
-				} else {
-					targetLocation--
-				}
-
-				break
+			dict, exists := dicMap[strValue]
+			if exists {
+				ret += dict
+				strValue = ""
 			}
+
+			continue
 		}
 
-		if !exists {
-			priorities = priorities[1:]
-			retCount++
-
-			if targetLocation == 0 {
-				break
-			} else {
-				targetLocation--
-			}
-		}
+		ret += strV
 	}
 
-	return retCount
+	res, _ := strconv.Atoi(ret)
+	return res
 }
