@@ -2,61 +2,43 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 )
 
 func main() {
-	res := solution("one4seveneight")
+	res := solution(13, 17)
 	fmt.Println(res)
 }
 
-func solution(s string) int {
+func solution(left int, right int) int {
 
 	/*
-	   0. 영단어가 key, 숫자가 value인 map을 생성한다.
-	   1. 문자열을 순회하면서
-	   2. 숫자일 경우 pass
-	   3. 문자일 경우 문자열 변수에 더한다. 그리고 해당 변수가 map에 존재한다면 숫자로 치환하고 문자열 변수 초기화
-	   4. 존재하지 않는다면 다음으로 pass
-
-	   1. dictMap 생성
-	   2. 문자열 변수 = strValue 생성
-	   3. 리턴할 변수 ret
+		1. left부터 right까지 순회하면서
+		2. 약수의 갯수를 구하는 함수를 실행시키고
+		3. 홀수면 - 짝수면 +
 	*/
-	var ret = ""
-	var dicMap = map[string]string{
-		"zero":  "0",
-		"one":   "1",
-		"two":   "2",
-		"three": "3",
-		"four":  "4",
-		"five":  "5",
-		"six":   "6",
-		"seven": "7",
-		"eight": "8",
-		"nine":  "9",
-	}
-	var strValue = ""
 
-	for _, v := range s {
-		strV := string(v)
-		_, err := strconv.Atoi(strV)
+	var ret int = 0
 
-		if err != nil {
-			strValue += strV
-
-			dict, exists := dicMap[strValue]
-			if exists {
-				ret += dict
-				strValue = ""
-			}
-
-			continue
+	for i := left; i <= right; i++ {
+		c := divisorCount(i)
+		if c%2 == 0 {
+			ret += i
+		} else {
+			ret -= i
 		}
-
-		ret += strV
 	}
 
-	res, _ := strconv.Atoi(ret)
-	return res
+	return ret
+}
+
+func divisorCount(n int) int {
+	var count = 0
+
+	for i := 1; i <= n; i++ {
+		if n%i == 0 {
+			count++
+		}
+	}
+
+	return count
 }
