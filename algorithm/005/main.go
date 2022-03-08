@@ -26,51 +26,90 @@ numbers	return
 */
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
 
 func main() {
 	res := solution("17")
-	fmt.Println(res) //
+	fmt.Println(res) // 3
+
+	res = solution("011")
+	fmt.Println(res) // 2
+	// fmt.Println(permutation([]int{1, 2, 3, 4}, 2))
 }
 
 func solution(numbers string) int {
-	// TODO:
 	/*
-	   1. 주어진 숫자로 만들 수 있는 모든 수를 찾는다.
-	   2. 찾아낸 수 가운데 소수를 찾는다.
+	   1. 입력값을 숫자로 변환
+	   2. 주어진 숫자로 만들 수 있는 모든 수를 찾는다.
+	   3. 찾아낸 수 가운데 소수를 찾는다.
 	*/
-	return 0
+
+	var ret = make(map[int]struct{})
+	var arr []string = strings.Split(numbers, "")
+
+	k := [][]string{}
+	for i := 1; i <= len(arr); i++ {
+		p := permutation(arr, i)
+		k = append(k, p...)
+	}
+
+	for i := 0; i < len(k); i++ {
+		val := ""
+		for j := 0; j < len(k[i]); j++ {
+			val += k[i][j]
+		}
+		rval, _ := strconv.Atoi(val)
+		if isPrime(rval) {
+			ret[rval] = struct{}{}
+		}
+	}
+
+	return len(ret)
 }
 
-/*
-function solution(numbers) {
-    var answer = 0;
-    const numArr = numbers.split('')
-    const permutationAll = []
-    for(let r=1; r<=numbers.length; r++){
-        const permutationR
-           = Permutation(numArr, r).map((permuArr) =>
-               parseInt(permuArr.join(''))
-           )
-        for(let i=0; i<permutationR.length; i++) permutationAll.push(permutationR[i])
-    }
-    const permutationSet = [...new Set(permutationAll)]
-    for(const number of permutationSet) answer += isPrime(number) ? 1 : 0
-    return answer;
+func permutation(arr []string, n int) [][]string {
+	var ret [][]string
+
+	if n == 1 {
+		for i := 0; i < len(arr); i++ {
+			ret = append(ret, []string{arr[i]})
+		}
+		return ret
+	}
+
+	for i, v := range arr {
+		fixer := v
+		newArr := []string{}
+		for ii, vv := range arr {
+			// 주의할 부분. 값으로 비교할 경우 중복된 숫자가 있는경우 문제가 발생한다.
+			if ii != i {
+				newArr = append(newArr, vv)
+			}
+		}
+
+		permutationArr := permutation(newArr, n-1)
+		combineFixer := [][]string{}
+		for _, w := range permutationArr {
+			combineFixer = append(combineFixer, append([]string{fixer}, w...))
+		}
+		ret = append(ret, combineFixer...)
+	}
+	return ret
 }
-function Permutation(arr, r){
-    const result = []
-    if(r === 1) return arr.map((num)=>[num])
-    arr.forEach((fixed, index, org)=>{
-        const rest = [...org.slice(0,index), ...org.slice(index+1)]
-        const permutation = Permutation(rest, r-1)
-        const attached = permutation.map((numbers)=>[fixed, ...numbers])
-        result.push(...attached)
-    })
-    return result
+
+// isPrime
+func isPrime(n int) bool {
+	if n <= 1 {
+		return false
+	}
+	for i := 2; i*i <= n; i++ {
+		if n%i == 0 {
+			return false
+		}
+	}
+	return true
 }
-function isPrime(num){
-    for(let i=2; i <= Math.sqrt(num); i++) if(num%i === 0) return false
-    return num >= 2
-}
-*/
