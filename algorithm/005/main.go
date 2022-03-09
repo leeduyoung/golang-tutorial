@@ -33,12 +33,13 @@ import (
 )
 
 func main() {
-	res := solution("17")
-	fmt.Println(res) // 3
+	// res := solution("17")
+	// fmt.Println(res) // 3
 
-	res = solution("011")
-	fmt.Println(res) // 2
-	// fmt.Println(permutation([]int{1, 2, 3, 4}, 2))
+	// res = solution("011")
+	// fmt.Println(res) // 2
+
+	fmt.Println(permutation([]string{"1", "2", "3"}, 3))
 }
 
 func solution(numbers string) int {
