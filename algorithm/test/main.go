@@ -5,40 +5,39 @@ import (
 )
 
 func main() {
-	res := solution(13, 17)
+	res := solution([]int{0, 0, 0, 0, 0, 0}, []int{1, 2, 3, 4, 5, 6})
 	fmt.Println(res)
 }
 
-func solution(left int, right int) int {
+func solution(lottos []int, win_nums []int) []int {
 
-	/*
-		1. left부터 right까지 순회하면서
-		2. 약수의 갯수를 구하는 함수를 실행시키고
-		3. 홀수면 - 짝수면 +
-	*/
+	rankMap := map[int]int{
+		6: 1,
+		5: 2,
+		4: 3,
+		3: 4,
+		2: 5,
+		1: 6,
+		0: 6,
+	}
 
-	var ret int = 0
+	equalsCount := 0
+	zeroCount := 0
 
-	for i := left; i <= right; i++ {
-		c := divisorCount(i)
-		if c%2 == 0 {
-			ret += i
-		} else {
-			ret -= i
+	for _, v := range lottos {
+		if v == 0 {
+			zeroCount++
+		}
+
+		for _, w := range win_nums {
+			if v == w {
+				equalsCount++
+			}
 		}
 	}
 
-	return ret
-}
+	best := rankMap[equalsCount+zeroCount]
+	worst := rankMap[equalsCount]
 
-func divisorCount(n int) int {
-	var count = 0
-
-	for i := 1; i <= n; i++ {
-		if n%i == 0 {
-			count++
-		}
-	}
-
-	return count
+	return []int{best, worst}
 }
