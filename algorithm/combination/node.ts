@@ -19,3 +19,24 @@ function combination(arr: number[], selectNum: number): number[][] {
 
 console.log(combination([1, 2, 3, 4], 3)) // 4가지
 console.log(combination([1, 2, 3, 4], 3).length) // 4가지
+
+// ==============================================================================
+
+console.log(combination2([1, 2, 3, 4], 3)) // 4가지
+console.log(combination2([1, 2, 3, 4], 3).length) // 4가지
+
+function combination2(arr: number[], selectNum: number): number[][] {
+  let ret: number[][] = []
+
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = i + 1; j < arr.length; j++) {
+      for (let k = j + 1; k < arr.length; k++) {
+        if (i === j || j === k || k === i) continue
+
+        ret.push([arr[i], arr[j], arr[k]])
+      }
+    }
+  }
+
+  return ret
+}

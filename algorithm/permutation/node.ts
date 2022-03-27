@@ -21,3 +21,24 @@ function permutation(arr: number[], selectNum: number): number[][] {
 
 console.log(permutation([1, 2, 3, 4], 3)) // 24가지
 console.log(permutation([1, 2, 3, 4], 3).length) // 24가지
+
+// ==============================================================================
+
+console.log(permutation2([1, 2, 3, 4], 3)) // 24가지
+console.log(permutation2([1, 2, 3, 4], 3).length) // 24가지
+
+function permutation2(arr: number[], selectNum: number): number[][] {
+  let ret: number[][] = []
+
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = 0; j < arr.length; j++) {
+      for (let k = 0; k < arr.length; k++) {
+        if (i === j || j === k || k === i) continue
+
+        ret.push([arr[i], arr[j], arr[k]])
+      }
+    }
+  }
+
+  return ret
+}
