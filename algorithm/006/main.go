@@ -39,13 +39,12 @@ func solution(nums []int) int {
 	answer := 0
 
 	/*
-		1. 전달받은 nums 배열에서 세개를 뽑은 모든 경우의 수를 구한다.
-		2. 모든 경우의수를 돌면서 소수인지 판별한다.
-		3. 리턴한다.
+		1. nums 배열에서 3개를 뽑는 경우의 수를 모두 구한다. (조합)
+		2. 조합이 담긴 배열에서 모두 합을 구한다.
+		3. 소수인지 판별한다.
+		4. 소수라면 answer++
 	*/
-	selectNum := 3
-	res := permutation(nums, selectNum)
-
+	res := combination(nums, 3)
 	for _, v := range res {
 		sum := 0
 		for _, w := range v {
@@ -60,44 +59,25 @@ func solution(nums []int) int {
 	return answer
 }
 
-func permutation(nums []int, selectNum int) [][]int {
-	/*
-		순열은 n개중 selectNum 개수만큼 뽑아내는 경우의 수를 의미한다.
-		nums에서 selectNum 개수만큼 뽑아내는 경우의 수를 구해보자.
-
-		1. selectNum이 1일 경우엔 모든 수를 배열에 담아서 리턴한다.
-		2. 배열을 하나씩 순회하면서 조합을 만들어나간다. fixer
-		3. 선택한 숫자를 제외하고 나머지를 배열에 담는다. restArr
-		4. restArr와 selectNum - 1을 사용해서 다시 재귀적으로 permutation을 호출한다.
-		5. combineFixer에 재귀로 전달받은 permutation 값을 더한다.
-	*/
+func combination(arr []int, selectNum int) [][]int {
 	ret := [][]int{}
 
 	if selectNum == 1 {
-		for _, v := range nums {
+		for _, v := range arr {
 			ret = append(ret, []int{v})
 		}
 		return ret
 	}
 
-	for i := 0; i < len(nums); i++ {
-		fixer := nums[i]
+	for i, v := range arr {
+		fixer := v
+		restArr := arr[i+1:]
+		result := combination(restArr, selectNum-1)
 
-		restArr := []int{}
-		for _, v := range nums {
-			if v != fixer {
-				restArr = append(restArr, v)
-			}
-		}
-
-		permutationRes := permutation(restArr, selectNum-1)
-		combineFixer := [][]int{}
-		for _, vv := range permutationRes {
+		for _, vv := range result {
 			list := append([]int{fixer}, vv...)
-			combineFixer = append(combineFixer, list)
+			ret = append(ret, list)
 		}
-
-		ret = append(ret, combineFixer...)
 	}
 
 	return ret
