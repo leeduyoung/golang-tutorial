@@ -30,17 +30,84 @@ image.png
 
 func main() {
 	fmt.Println("started..")
+	// fmt.Println(solution(7, [][]int{{2, 3, 7}, {3, 6, 13}, {3, 5, 23}, {5, 6, 25}, {0, 1, 29}, {1, 5, 34}, {1, 2, 35}, {4, 5, 53}, {0, 4, 75}}))
+	fmt.Println(solution(4, [][]int{{0, 1, 1}, {0, 2, 2}, {1, 2, 5}, {1, 3, 1}, {2, 3, 8}}))                                   // 4
+	fmt.Println(solution(5, [][]int{{0, 1, 5}, {1, 2, 3}, {2, 3, 3}, {3, 1, 2}, {3, 0, 4}, {2, 4, 6}, {4, 0, 7}}))             // 15
+	fmt.Println(solution(5, [][]int{{0, 1, 1}, {3, 4, 1}, {1, 2, 2}, {2, 3, 4}}))                                              // 8
+	fmt.Println(solution(4, [][]int{{0, 1, 5}, {1, 2, 3}, {2, 3, 3}, {1, 3, 2}, {0, 3, 4}}))                                   // 9
+	fmt.Println(solution(6, [][]int{{0, 1, 5}, {0, 3, 2}, {0, 4, 3}, {1, 4, 1}, {3, 4, 10}, {1, 2, 2}, {2, 5, 3}, {4, 5, 4}})) // 11
+	fmt.Println(solution(5, [][]int{{0, 1, 1}, {2, 3, 1}, {3, 4, 2}, {1, 2, 2}, {0, 4, 100}}))                                 // 6
+	fmt.Println(solution(5, [][]int{{0, 1, 1}, {0, 2, 2}, {0, 3, 3}, {0, 4, 4}, {1, 3, 1}}))                                   // 8
 
+	// fail
+	fmt.Println(solution(5, [][]int{{0, 1, 1}, {0, 4, 5}, {2, 4, 1}, {2, 3, 1}, {3, 4, 1}}))   // 8
+	fmt.Println(solution(5, [][]int{{0, 1, 1}, {3, 1, 1}, {0, 2, 2}, {0, 3, 2}, {0, 4, 100}})) // 104
 }
 
 func solution(n int, costs [][]int) int {
+	min := 101
+
 	if n == 1 {
-		return 0
+		return min
 	}
 
 	if n == 2 {
 		return costs[0][2]
 	}
 
-	return 0
+	/*
+		1. costs에서 n-1개를 뽑는 경우의 수를 모두 구한다.
+		2. 이때, 0부터 n-1까지 포함할 수 있는 경우의 수만 골라낸다.
+		3. 여기서 최소값을 구한다.
+	*/
+	response := combination(costs, n-1)
+
+	for _, v := range response {
+		if isValidate(n, v) {
+			sum := 0
+			for _, w := range v {
+				sum += w[2]
+			}
+
+			if sum < min {
+				min = sum
+			}
+		}
+	}
+
+	return min
+}
+
+func isValidate(n int, data [][]int) bool {
+	m := map[int]bool{}
+
+	for _, v := range data {
+		m[v[0]] = true
+		m[v[1]] = true
+	}
+
+	return len(m) == n
+}
+
+func combination(arr [][]int, selectNum int) [][][]int {
+	ret := [][][]int{}
+
+	if selectNum == 1 {
+		for _, v := range arr {
+			ret = append(ret, [][]int{v})
+		}
+		return ret
+	}
+
+	for i, v := range arr {
+		fixer := v
+		restArr := arr[i+1:]
+		result := combination(restArr, selectNum-1)
+
+		for _, v2 := range result {
+			ret = append(ret, append([][]int{fixer}, v2...))
+		}
+	}
+
+	return ret
 }
