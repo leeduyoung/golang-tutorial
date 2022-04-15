@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 /*
 섬 연결하기 (탐욕법)
@@ -45,6 +48,32 @@ func main() {
 }
 
 func solution(n int, costs [][]int) int {
+
+	// 1. 도로를 건설하는데 필요한 비용을 기준으로 오름차순 정렬한다.
+	sort.Slice(costs, func(i, j int) bool {
+		return costs[i][2] < costs[j][2]
+	})
+
+	// 2. 각 정점이 포함된 그래프가 어디인지 저장 (초기화)
+	parent := []int{}
+	for i := 0; i < n; i++ {
+		parent = append(parent, i)
+	}
+
+	// 3. 사이클이 발생하지 않을 경우 그래프에 포함
+	sum := 0
+
+	for i := 0; i < len(costs); i++ {
+		if !findParent(parent, costs[i][0], costs[i][1]) {
+			sum += costs[i][2]
+			unionParent(parent, costs[i][0], costs[i][1])
+		}
+	}
+
+	return sum
+}
+
+func solution2(n int, costs [][]int) int {
 	min := 101
 
 	if n == 1 {
@@ -110,4 +139,33 @@ func combination(arr [][]int, selectNum int) [][][]int {
 	}
 
 	return ret
+}
+
+// 부모노드 찾기
+func getParent(parent []int, x int) int {
+	if parent[x] == x {
+		return x
+	}
+
+	return getParent(parent, parent[x])
+}
+
+// 두 부모노드를 합치는 함수
+func unionParent(parent []int, a int, b int) {
+	aParent := getParent(parent, a)
+	bParent := getParent(parent, b)
+
+	if aParent < bParent {
+		parent[b] = aParent
+	} else {
+		parent[a] = bParent
+	}
+}
+
+// 같은 부모를 가지는지 확인 (즉, 두개의 노드가 동일한 그래프에 포함되어있는지 확인)
+func findParent(parent []int, a int, b int) bool {
+	aParent := getParent(parent, a)
+	bParent := getParent(parent, b)
+
+	return aParent == bParent
 }
