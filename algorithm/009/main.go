@@ -45,6 +45,17 @@ func main() {
 	// fail
 	fmt.Println(solution(5, [][]int{{0, 1, 1}, {0, 4, 5}, {2, 4, 1}, {2, 3, 1}, {3, 4, 1}}))   // 8
 	fmt.Println(solution(5, [][]int{{0, 1, 1}, {3, 1, 1}, {0, 2, 2}, {0, 3, 2}, {0, 4, 100}})) // 104
+
+	parent := []int{}
+	for i := 0; i <= 4; i++ {
+		parent = append(parent, i)
+	}
+
+	fmt.Println(parent)
+	unionParent(parent, 0, 1)
+	unionParent(parent, 1, 2)
+	unionParent(parent, 3, 4)
+	// fmt.Println(findParent(parent))
 }
 
 func solution(n int, costs [][]int) int {
