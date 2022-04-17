@@ -33,7 +33,6 @@ image.png
 
 func main() {
 	fmt.Println("started..")
-	// fmt.Println(solution(7, [][]int{{2, 3, 7}, {3, 6, 13}, {3, 5, 23}, {5, 6, 25}, {0, 1, 29}, {1, 5, 34}, {1, 2, 35}, {4, 5, 53}, {0, 4, 75}}))
 	fmt.Println(solution(4, [][]int{{0, 1, 1}, {0, 2, 2}, {1, 2, 5}, {1, 3, 1}, {2, 3, 8}}))                                   // 4
 	fmt.Println(solution(5, [][]int{{0, 1, 5}, {1, 2, 3}, {2, 3, 3}, {3, 1, 2}, {3, 0, 4}, {2, 4, 6}, {4, 0, 7}}))             // 15
 	fmt.Println(solution(5, [][]int{{0, 1, 1}, {3, 4, 1}, {1, 2, 2}, {2, 3, 4}}))                                              // 8
@@ -41,25 +40,23 @@ func main() {
 	fmt.Println(solution(6, [][]int{{0, 1, 5}, {0, 3, 2}, {0, 4, 3}, {1, 4, 1}, {3, 4, 10}, {1, 2, 2}, {2, 5, 3}, {4, 5, 4}})) // 11
 	fmt.Println(solution(5, [][]int{{0, 1, 1}, {2, 3, 1}, {3, 4, 2}, {1, 2, 2}, {0, 4, 100}}))                                 // 6
 	fmt.Println(solution(5, [][]int{{0, 1, 1}, {0, 2, 2}, {0, 3, 3}, {0, 4, 4}, {1, 3, 1}}))                                   // 8
+	fmt.Println(solution(5, [][]int{{0, 1, 1}, {0, 4, 5}, {2, 4, 1}, {2, 3, 1}, {3, 4, 1}}))                                   // 8
+	fmt.Println(solution(5, [][]int{{0, 1, 1}, {3, 1, 1}, {0, 2, 2}, {0, 3, 2}, {0, 4, 100}}))                                 // 104
 
-	// fail
-	fmt.Println(solution(5, [][]int{{0, 1, 1}, {0, 4, 5}, {2, 4, 1}, {2, 3, 1}, {3, 4, 1}}))   // 8
-	fmt.Println(solution(5, [][]int{{0, 1, 1}, {3, 1, 1}, {0, 2, 2}, {0, 3, 2}, {0, 4, 100}})) // 104
+	// union find
+	// parent := []int{}
+	// for i := 0; i <= 4; i++ {
+	// 	parent = append(parent, i)
+	// }
 
-	parent := []int{}
-	for i := 0; i <= 4; i++ {
-		parent = append(parent, i)
-	}
-
-	fmt.Println(parent)
-	unionParent(parent, 0, 1)
-	unionParent(parent, 1, 2)
-	unionParent(parent, 3, 4)
-	// fmt.Println(findParent(parent))
+	// fmt.Println(parent)
+	// unionParent(parent, 0, 1)
+	// unionParent(parent, 1, 2)
+	// unionParent(parent, 3, 4)
+	// fmt.Println(findParent(parent, 0, 2))
 }
 
 func solution(n int, costs [][]int) int {
-
 	// 1. 도로를 건설하는데 필요한 비용을 기준으로 오름차순 정렬한다.
 	sort.Slice(costs, func(i, j int) bool {
 		return costs[i][2] < costs[j][2]
@@ -167,9 +164,9 @@ func unionParent(parent []int, a int, b int) {
 	bParent := getParent(parent, b)
 
 	if aParent < bParent {
-		parent[b] = aParent
+		parent[bParent] = aParent
 	} else {
-		parent[a] = bParent
+		parent[aParent] = bParent
 	}
 }
 
