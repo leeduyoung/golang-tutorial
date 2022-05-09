@@ -1,12 +1,20 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type stack[T any] struct {
 	data []T
 }
 
-func New[T any]() *stack[T] {
+type Stack[T any] interface {
+	Push(data T)
+	Pop() T
+	Get() []T
+}
+
+func New[T any]() Stack[T] {
 	return &stack[T]{
 		data: []T{},
 	}
@@ -25,7 +33,7 @@ func (s *stack[T]) Pop() T {
 	return lastData
 }
 
-func (s *stack[T]) get() []T {
+func (s *stack[T]) Get() []T {
 	return s.data
 }
 
@@ -37,7 +45,7 @@ func main() {
 	intStack.Push(4)
 	intStack.Pop()
 
-	response := intStack.get()
+	response := intStack.Get()
 	fmt.Println(response)
 
 	stringStack := New[string]()
@@ -47,6 +55,6 @@ func main() {
 	stringStack.Push("d")
 	stringStack.Pop()
 
-	response2 := stringStack.get()
+	response2 := stringStack.Get()
 	fmt.Println(response2)
 }

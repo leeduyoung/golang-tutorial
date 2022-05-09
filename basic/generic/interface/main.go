@@ -6,7 +6,13 @@ type stack struct {
 	data []interface{}
 }
 
-func New() *stack {
+type Stack interface {
+	Push(data interface{})
+	Pop() interface{}
+	Get() []interface{}
+}
+
+func New() Stack {
 	return &stack{
 		data: []interface{}{},
 	}
@@ -25,7 +31,7 @@ func (s *stack) Pop() interface{} {
 	return lastData
 }
 
-func (s *stack) get() []interface{} {
+func (s *stack) Get() []interface{} {
 	return s.data
 }
 
@@ -37,6 +43,6 @@ func main() {
 	stack.Push("40")
 	stack.Pop()
 
-	response := stack.get()
+	response := stack.Get()
 	fmt.Println(response...)
 }
