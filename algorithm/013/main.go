@@ -30,7 +30,7 @@ func main() {
 	fmt.Println(solution([]int{2, 3, 4}))     // 12
 }
 
-func solution(arr []int) int {
+func solutionBack(arr []int) int {
 	var answer = 0
 
 	// 1. arr 오름차순 정렬
@@ -78,10 +78,33 @@ func solution(arr []int) int {
 	return answer
 }
 
-// 여러수의 최소 공배수는 순서에 상관없이 두개씩 순차적으로 구하면 된다.
+func solution(arr []int) int {
+	answer := 0
+
+	// tip. 여러수의 최소 공배수는 순서에 상관없이 두개씩 순차적으로 구하면 된다.
+	for i := 1; i < len(arr); i++ {
+		if i == 1 {
+			gcdVal := gcd(arr[0], arr[i])
+			answer = (arr[0] * arr[i]) / gcdVal
+			continue
+		}
+
+		gcdVal := gcd(answer, arr[i])
+		answer = (answer * arr[i]) / gcdVal
+	}
+
+	return answer
+}
 
 // 최대 공약수 - gcd (유클리드 호제법)
-// TODO:
+func gcd(a, b int) int {
+	if b == 0 {
+		return a
+	}
+	return gcd(b, a%b)
+}
 
 // 최소 공배수 -lcm
-// TODO:
+func lcm(a, b, gcd int) int {
+	return (a * b) / gcd
+}
