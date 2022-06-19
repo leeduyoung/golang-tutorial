@@ -84,13 +84,11 @@ func solution(arr []int) int {
 	// tip. 여러수의 최소 공배수는 순서에 상관없이 두개씩 순차적으로 구하면 된다.
 	for i := 1; i < len(arr); i++ {
 		if i == 1 {
-			gcdVal := gcd(arr[0], arr[i])
-			answer = (arr[0] * arr[i]) / gcdVal
+			answer = lcm(arr[0], arr[i], gcd(arr[0], arr[i]))
 			continue
 		}
 
-		gcdVal := gcd(answer, arr[i])
-		answer = (answer * arr[i]) / gcdVal
+		answer = lcm(answer, arr[i], gcd(answer, arr[i]))
 	}
 
 	return answer
